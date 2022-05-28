@@ -3,21 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kruise.API", "Kruise.API\Kruise.API.csproj", "{DEE4D045-BCB2-4961-82F9-0B2D32A49F43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kruise.API", "Kruise.API\Kruise.API.csproj", "{DEE4D045-BCB2-4961-82F9-0B2D32A49F43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kruise.Domain", "Kruise.Domain\Kruise.Domain.csproj", "{CB5ECF96-8EC4-4917-B9BA-E40FC8D91F56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kruise.Domain", "Kruise.Domain\Kruise.Domain.csproj", "{CB5ECF96-8EC4-4917-B9BA-E40FC8D91F56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kruise.BusinessLogic", "Kruise.BusinessLogic\Kruise.BusinessLogic.csproj", "{52090452-C8D6-4D9F-ABBF-5D9E74DCB5D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kruise.BusinessLogic", "Kruise.BusinessLogic\Kruise.BusinessLogic.csproj", "{52090452-C8D6-4D9F-ABBF-5D9E74DCB5D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kruise.DataAccess.Postgres", "Kruise.DataAccess.Postgres\Kruise.DataAccess.Postgres.csproj", "{FBD87A48-8AFF-4C4D-B91D-D23159E6C85F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kruise.DataAccess.Postgres", "Kruise.DataAccess.Postgres\Kruise.DataAccess.Postgres.csproj", "{FBD87A48-8AFF-4C4D-B91D-D23159E6C85F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kruise.UnitTests", "Kruise.UnitTests\Kruise.UnitTests.csproj", "{109BE484-D3FE-408B-8855-31B1E00874FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kruise.UnitTests", "Kruise.UnitTests\Kruise.UnitTests.csproj", "{109BE484-D3FE-408B-8855-31B1E00874FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kruise.IntegrationTests", "Kruise.IntegrationTests\Kruise.IntegrationTests.csproj", "{38EAFACF-FD11-4383-A507-E98AAD0BE0E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kruise.IntegrationTests", "Kruise.IntegrationTests\Kruise.IntegrationTests.csproj", "{38EAFACF-FD11-4383-A507-E98AAD0BE0E2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionsItems", "SolutionsItems", "{5694CE16-01CD-4623-A059-7BD1481E4829}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Global
