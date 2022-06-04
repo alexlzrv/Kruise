@@ -33,38 +33,23 @@ namespace Kruise.API.Controllers
             return Ok(postId);
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Post>>> GetPostsItems()
-        //{
-        //    return await _repository.Posts.ToListAsync();
-        //}
+        [HttpGet]
+        public IEnumerable<Post> Get()
+        {
+            return _repository.GetPosts();
+        }
 
-        //[HttpGet("{postId}")]
-        //public async Task<ActionResult<Post>> GetPostsItem(long postId)
-        //{
-        //    var postsItem = await _repository.Posts.FindAsync(postId);
+        [HttpGet("{id}")]
+        public async Task<Post> Get(long id)
+        {
+            return await _repository.GetPostById(id);
+        }
 
-        //    if (postsItem == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return postsItem;
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Post>> DeletePostsItem(long id)
-        //{
-        //    var todoItem = await _repository.Posts.FindAsync(id);
-        //    if (todoItem == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _repository.Posts.Remove(todoItem);
-        //    await _repository.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            await _repository.RemovePost(id);
+            return Ok();
+        }
     }
 }

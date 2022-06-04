@@ -19,5 +19,23 @@ namespace Kruise.DataAccess.Postgres.Repositories
             await _dbContext.SaveChangesAsync();
             return post.Id;
         }
+
+        public async Task RemovePost(long id)
+        {
+            var post = await _dbContext.Posts.FindAsync(id);
+            _dbContext.Posts.Remove(post);
+            _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<Domain.Post> GetPosts()
+        {
+            return _dbContext.Posts.ToList();
+        }
+
+        public async Task<Domain.Post> GetPostById(long id)
+        {
+            var post = await _dbContext.Posts.FindAsync(id);
+            return post;
+        }
     }
 }
