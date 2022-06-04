@@ -1,8 +1,6 @@
 ﻿using Kruise.API.Contracts;
-using Kruise.DataAccess.Postgres;
 using Kruise.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Kruise.API.Controllers
 {
@@ -34,21 +32,28 @@ namespace Kruise.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Post> Get()
+        public async Task<IActionResult> Get()
         {
-            return _repository.GetPosts();
+            var posts = await _repository.Get();
+            return Ok(posts);
         }
 
-        [HttpGet("{id}")]
-        public async Task<Post> Get(long id)
+        [HttpGet("{postId}")]
+        public async Task<IActionResult> Get(long postId)
         {
-            return await _repository.GetPostById(id);
+            var post = await _repository.Get(postId);
+            if (post == null)
+            {
+                return NotFound($"Posts with Id:{postId} not found");
+            }
+
+            return Ok(post);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
+        [HttpDelete("{postId}")]
+        public async Task<IActionResult> Delete(long postId)
         {
-            await _repository.RemovePost(id);
+            await _repository.Remove(postId);
             return Ok();
         }
     }

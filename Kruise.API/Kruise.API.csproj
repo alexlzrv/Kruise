@@ -25,4 +25,9 @@
     <AdditionalFiles Include="../.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Kruise.IntegrationTests" />
+  </ItemGroup>
+
+
 </Project>

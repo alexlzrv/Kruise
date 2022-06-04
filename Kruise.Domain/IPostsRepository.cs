@@ -4,10 +4,10 @@
     {
         Task<long> Add(Post newPost);
 
-        Task RemovePost(long id);
+        Task Remove(long postId);
 
-        IEnumerable<Post> GetPosts();
+        Task<Post[]> Get();
 
-        Task<Post> GetPostById(long id);
+        Task<Post?> Get(long postiId);
     }
 }
