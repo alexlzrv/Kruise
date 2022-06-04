@@ -1,8 +1,6 @@
 ﻿using Kruise.API.Contracts;
-using Kruise.DataAccess.Postgres;
 using Kruise.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Kruise.API.Controllers
 {
@@ -33,38 +31,30 @@ namespace Kruise.API.Controllers
             return Ok(postId);
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Post>>> GetPostsItems()
-        //{
-        //    return await _repository.Posts.ToListAsync();
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var posts = await _repository.Get();
+            return Ok(posts);
+        }
 
-        //[HttpGet("{postId}")]
-        //public async Task<ActionResult<Post>> GetPostsItem(long postId)
-        //{
-        //    var postsItem = await _repository.Posts.FindAsync(postId);
+        [HttpGet("{postId}")]
+        public async Task<IActionResult> Get(long postId)
+        {
+            var post = await _repository.Get(postId);
+            if (post == null)
+            {
+                return NotFound($"Posts with Id:{postId} not found");
+            }
 
-        //    if (postsItem == null)
-        //    {
-        //        return NotFound();
-        //    }
+            return Ok(post);
+        }
 
-        //    return postsItem;
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Post>> DeletePostsItem(long id)
-        //{
-        //    var todoItem = await _repository.Posts.FindAsync(id);
-        //    if (todoItem == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _repository.Posts.Remove(todoItem);
-        //    await _repository.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
+        [HttpDelete("{postId}")]
+        public async Task<IActionResult> Delete(long postId)
+        {
+            await _repository.Remove(postId);
+            return Ok();
+        }
     }
 }
