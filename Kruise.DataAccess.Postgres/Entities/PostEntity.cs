@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Kruise.Domain;
 
-namespace Kruise.API.Contracts;
+namespace Kruise.DataAccess.Postgres.Entities;
 
-public class CreatePostRequest
+public class PostEntity
 {
-    public CreatePostRequest(string title)
+    public PostEntity(long id, string title)
     {
+        Id = id;
         Title = title;
     }
 
-    [Required(ErrorMessage = Errors.Post.TitleCanNotBeNullOrWhiteSpace)]
+    public long Id { get; set; }
+
     [StringLength(PostModel.MaxTitleLength, ErrorMessage = Errors.Post.TitleMaxLength)]
     public string Title { get; set; }
 }

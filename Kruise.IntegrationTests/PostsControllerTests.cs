@@ -13,7 +13,7 @@ namespace Kruise.IntegrationTests
             // Arrange
             var application = new WebApplicationFactory<Program>();
             var client = application.CreateClient();
-            var request = new CreatePostRequest { Title = Guid.NewGuid().ToString() };
+            var request = new CreatePostRequest(Guid.NewGuid().ToString());
 
             // Act
             var responce = await client.PostAsJsonAsync("api/posts", request);
@@ -31,7 +31,7 @@ namespace Kruise.IntegrationTests
             // Arrange
             var application = new WebApplicationFactory<Program>();
             var client = application.CreateClient();
-            var request = new CreatePostRequest { Title = title };
+            var request = new CreatePostRequest(title);
 
             // Act
             var responce = await client.PostAsJsonAsync("api/posts", request);

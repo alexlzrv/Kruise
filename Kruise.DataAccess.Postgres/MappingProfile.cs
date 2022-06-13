@@ -7,6 +7,11 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Post, Domain.Post>();
+        CreateMap<PostEntity, Domain.PostModel>()
+            .ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+        CreateMap<AccountEntity, Domain.AccountModel>()
+            .ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }

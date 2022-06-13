@@ -3,9 +3,9 @@ using Kruise.Domain;
 
 namespace Kruise.API.Contracts;
 
-public class CreatePostRequest
+public class UpdatePostRequest
 {
-    public CreatePostRequest(string title)
+    public UpdatePostRequest(string title)
     {
         Title = title;
     }
