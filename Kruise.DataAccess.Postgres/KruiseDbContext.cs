@@ -10,5 +10,6 @@ public class KruiseDbContext : DbContext
     {
     }
 
-    public DbSet<Post> Posts { get; set; } = null!;
+    public DbSet<PostEntity> Posts { get; set; } = null!;
+    public DbSet<AccountEntity> Accounts { get; set; } = null!;
 }

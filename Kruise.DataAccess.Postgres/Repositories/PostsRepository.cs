@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using Kruise.Domain;
+using Kruise.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kruise.DataAccess.Postgres.Repositories
@@ -15,9 +17,9 @@ namespace Kruise.DataAccess.Postgres.Repositories
             _mapper = mapper;
         }
 
-        public async Task<long> Add(Domain.Post newPost)
+        public async Task<long> Add(Domain.PostModel newPost)
         {
-            var post = new Entities.Post { Title = newPost.Title };
+            var post = new Entities.PostEntity(0, newPost.Title);
             _dbContext.Posts.Add(post);
             await _dbContext.SaveChangesAsync();
             return post.Id;
@@ -30,13 +32,13 @@ namespace Kruise.DataAccess.Postgres.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Domain.Post[]> Get()
+        public async Task<Domain.PostModel[]> Get()
         {
             var posts = await _dbContext.Posts.AsNoTracking().ToArrayAsync();
-            return _mapper.Map<Entities.Post[], Domain.Post[]>(posts);
+            return _mapper.Map<Entities.PostEntity[], Domain.PostModel[]>(posts);
         }
 
-        public async Task<Domain.Post?> Get(long postId)
+        public async Task<Domain.PostModel?> Get(long postId)
         {
             var post = await _dbContext.Posts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null)
@@ -44,7 +46,20 @@ namespace Kruise.DataAccess.Postgres.Repositories
                 return null;
             }
 
-            return _mapper.Map<Entities.Post, Domain.Post>(post);
+            return _mapper.Map<Entities.PostEntity, PostModel>(post);
+        }
+
+        public async Task<Result> Update(long postId, PostModel post)
+        {
+            var postExists = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            if (postExists == null)
+            {
+                return Result.Failure($"Post with id: {postId} not found");
+            }
+
+            var postEntity = _mapper.Map(post, postExists);
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
         }
     }
 }

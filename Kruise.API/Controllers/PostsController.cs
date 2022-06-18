@@ -1,5 +1,6 @@
 ﻿using Kruise.API.Contracts;
 using Kruise.Domain;
+using Kruise.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kruise.API.Controllers
@@ -20,7 +21,7 @@ namespace Kruise.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreatePostRequest request)
         {
-            var post = Post.Create(request.Title);
+            var post = PostModel.Create(request.Title);
             if (post.IsFailure)
             {
                 _logger.LogError(post.Error);
@@ -54,6 +55,26 @@ namespace Kruise.API.Controllers
         public async Task<IActionResult> Delete(long postId)
         {
             await _repository.Remove(postId);
+            return Ok();
+        }
+
+        [HttpPut("{postId}")]
+        public async Task<IActionResult> Update(long postId, UpdatePostRequest updatePostRequest)
+        {
+            var updatedPost = PostModel.Create(updatePostRequest.Title);
+            if (updatedPost.IsFailure)
+            {
+                _logger.LogError(updatedPost.Error);
+                return Problem(updatedPost.Error);
+            }
+
+            var updatedResult = await _repository.Update(postId, updatedPost.Value);
+            if (updatedResult.IsFailure)
+            {
+                _logger.LogError(updatedResult.Error);
+                return Problem(updatedResult.Error);
+            }
+
             return Ok();
         }
     }
