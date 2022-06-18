@@ -59,9 +59,9 @@ namespace Kruise.API.Controllers
         }
 
         [HttpPut("{postId}")]
-        public async Task<IActionResult> Update(long postId, UpdatePostRequest updatePostRequest)
+        public async Task<IActionResult> Update(long postId, UpdatedPostRequest request)
         {
-            var updatedPost = PostModel.Create(updatePostRequest.Title);
+            var updatedPost = PostModel.Create(request.Title);
             if (updatedPost.IsFailure)
             {
                 _logger.LogError(updatedPost.Error);

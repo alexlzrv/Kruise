@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
+using Kruise.DataAccess.Postgres.Entities;
 using Kruise.Domain;
 using Kruise.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ namespace Kruise.DataAccess.Postgres.Repositories
             _mapper = mapper;
         }
 
-        public async Task<long> Add(Domain.PostModel newPost)
+        public async Task<long> Add(PostModel newPost)
         {
-            var post = new Entities.PostEntity(0, newPost.Title);
+            var post = new PostEntity(0, newPost.Title);
             _dbContext.Posts.Add(post);
             await _dbContext.SaveChangesAsync();
             return post.Id;
@@ -32,13 +33,13 @@ namespace Kruise.DataAccess.Postgres.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Domain.PostModel[]> Get()
+        public async Task<PostModel[]> Get()
         {
             var posts = await _dbContext.Posts.AsNoTracking().ToArrayAsync();
-            return _mapper.Map<Entities.PostEntity[], Domain.PostModel[]>(posts);
+            return _mapper.Map<PostEntity[], PostModel[]>(posts);
         }
 
-        public async Task<Domain.PostModel?> Get(long postId)
+        public async Task<PostModel?> Get(long postId)
         {
             var post = await _dbContext.Posts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null)
@@ -46,7 +47,7 @@ namespace Kruise.DataAccess.Postgres.Repositories
                 return null;
             }
 
-            return _mapper.Map<Entities.PostEntity, PostModel>(post);
+            return _mapper.Map<PostEntity, PostModel>(post);
         }
 
         public async Task<Result> Update(long postId, PostModel post)

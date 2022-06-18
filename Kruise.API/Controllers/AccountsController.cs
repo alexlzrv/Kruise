@@ -57,4 +57,24 @@ public class AccountsController : ControllerBase
         await _repository.Remove(accountId);
         return Ok();
     }
+
+    [HttpPut("{accountId}")]
+    public async Task<IActionResult> Update(long accountId, UpdateAccountRequest request)
+    {
+        var updatedAccount = AccountModel.Create(request.Name);
+        if (updatedAccount.IsFailure)
+        {
+            _logger.LogError(updatedAccount.Error);
+            return Problem(updatedAccount.Error);
+        }
+
+        var updatedResult = await _repository.Update(accountId, updatedAccount.Value);
+        if (updatedResult.IsFailure)
+        {
+            _logger.LogError(updatedResult.Error);
+            return Problem(updatedResult.Error);
+        }
+
+        return Ok();
+    }
 }
