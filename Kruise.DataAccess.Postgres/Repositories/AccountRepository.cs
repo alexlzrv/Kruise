@@ -4,15 +4,57 @@ using Kruise.DataAccess.Postgres.Entities;
 using Kruise.Domain;
 using Kruise.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Kruise.DataAccess.Postgres.Repositories;
+public class AccountCacheRepository : IAccountRepository
+{
+    private readonly IAccountRepository _repository;
+    private readonly IMemoryCache _cache;
+    private const string Key = "Accounts";
+
+    public AccountCacheRepository(IAccountRepository repository, IMemoryCache cache)
+    {
+        _repository = repository;
+        _cache = cache;
+    }
+
+    public Task<long> Add(AccountModel newAccount)
+    {
+        return _repository.Add(newAccount);
+    }
+
+    public async Task<AccountModel[]> Get()
+    {
+        var accounts = await _cache.GetOrCreateAsync<AccountModel[]>(Key, entry =>
+        {
+            return _repository.Get();
+        });
+        return accounts;
+    }
+
+    public Task<AccountModel?> Get(long accountId)
+    {
+        return _repository.Get(accountId);
+    }
+
+    public Task Remove(long accountId)
+    {
+        return _repository.Remove(accountId);
+    }
+
+    public Task<Result> Update(long accountId, AccountModel account)
+    {
+        return _repository.Update(accountId, account);
+    }
+}
 
 public class AccountRepository : IAccountRepository
 {
     private readonly KruiseDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public AccountRepository(KruiseDbContext dbContext, Mapper mapper)
+    public AccountRepository(KruiseDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;

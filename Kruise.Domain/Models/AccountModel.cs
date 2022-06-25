@@ -26,7 +26,7 @@ public record AccountModel
             var error = string.Format(Errors.Account.NameMaxLength, MaxNameLength);
             return Result.Failure<AccountModel>(error);
         }
+
         return new AccountModel(0, name);
     }
-
 }

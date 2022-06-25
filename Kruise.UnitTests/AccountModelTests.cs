@@ -18,9 +18,7 @@ public class AccountModelTests
     }
 
     [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
+    [MemberData(nameof(GenerateInvalidName))]
     public void Create_InvalidName_ShouldReturnBadRequest(string name)
     {
         // Act
@@ -28,5 +26,17 @@ public class AccountModelTests
 
         // Assert
         Assert.True(accountModel.IsFailure);
+    }
+
+    private static IEnumerable<object[]> GenerateInvalidName()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            yield return new string[] { " " };
+            yield return new string[] { string.Empty };
+            yield return new string[] { null };
+            var invalidString = Enumerable.Range(0, AccountModel.MaxNameLength + 5);
+            yield return new string[] { string.Join(string.Empty, invalidString) };
+        }
     }
 }

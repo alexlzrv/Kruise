@@ -30,12 +30,13 @@ namespace Kruise.UnitTests
 
         private static IEnumerable<object[]> GenerateInvalidTitle()
         {
-            Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
-                yield return new[] { "" };
-                yield return new[] { "".PadRight(random.Next(1, 100), ' ') };
-                yield return new[] { (object)null };
+                yield return new string[] { " " };
+                yield return new string[] { string.Empty };
+                yield return new string[] { null };
+                var invalidString = Enumerable.Range(0, PostModel.MaxTitleLength + 5);
+                yield return new string[] { string.Join(string.Empty, invalidString) };
             }
         }
     }
