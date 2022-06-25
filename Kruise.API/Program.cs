@@ -1,4 +1,5 @@
-﻿using Kruise.DataAccess.Postgres;
+﻿using Kruise.API.Controllers;
+using Kruise.DataAccess.Postgres;
 using Kruise.DataAccess.Postgres.Repositories;
 using Kruise.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<KruiseDbContext>(opt => opt.UseInMemoryDatabase("Kruise"));
+builder.Services.AddDbContext<KruiseDbContext>(opt => opt.UseInMemoryDatabase(nameof(KruiseDbContext)));
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+builder.Services.AddScoped<ModelServiceA>();
+builder.Services.AddScoped<ModelServiceB>();
+builder.Services.AddTransient<ModelRepositoryA>();
+builder.Services.AddScoped<ModelRepositoryB>();
 
 var app = builder.Build();
 

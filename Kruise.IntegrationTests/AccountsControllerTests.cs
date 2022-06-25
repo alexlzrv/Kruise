@@ -1,22 +1,28 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using AutoFixture;
 using Kruise.API.Contracts;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Kruise.Domain;
+using Xunit.Abstractions;
 
 namespace Kruise.IntegrationTests;
 
-public class AccountsControllerTests
+public class AccountsControllerTests : BaseControllerTests
 {
+    public AccountsControllerTests(ITestOutputHelper outputHelper)
+        : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task Create_ShouldReturnAccountId()
     {
         // Arrange
-        var application = new WebApplicationFactory<Program>();
-        var client = application.CreateClient();
-        var request = new CreateAccountRequest(Guid.NewGuid().ToString());
+        var fixture = new Fixture();
+        var request = new CreateAccountRequest(fixture.Create<string>().Substring(0, AccountModel.MaxNameLength));
 
         // Act
-        var responce = await client.PostAsJsonAsync("api/accounts", request);
+        var responce = await Client.PostAsJsonAsync("api/accounts", request);
 
         // Assert
         responce.EnsureSuccessStatusCode();
@@ -29,12 +35,10 @@ public class AccountsControllerTests
     public async Task Create_InvalidName_ShouldReturnBadRequest(string name)
     {
         // Arrange
-        var application = new WebApplicationFactory<Program>();
-        var client = application.CreateClient();
         var request = new CreateAccountRequest(name);
 
         // Act
-        var responce = await client.PostAsJsonAsync("api/accounts", request);
+        var responce = await Client.PostAsJsonAsync("api/accounts", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, responce.StatusCode);

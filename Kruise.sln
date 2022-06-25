@@ -18,8 +18,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionsItems", "SolutionsItems", "{5694CE16-01CD-4623-A059-7BD1481E4829}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		stylecop.json = stylecop.json
 	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0168C101-89DA-4327-BE60-E906308A818C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +54,10 @@ Global
 		{38EAFACF-FD11-4383-A507-E98AAD0BE0E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38EAFACF-FD11-4383-A507-E98AAD0BE0E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38EAFACF-FD11-4383-A507-E98AAD0BE0E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0168C101-89DA-4327-BE60-E906308A818C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0168C101-89DA-4327-BE60-E906308A818C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0168C101-89DA-4327-BE60-E906308A818C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0168C101-89DA-4327-BE60-E906308A818C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
