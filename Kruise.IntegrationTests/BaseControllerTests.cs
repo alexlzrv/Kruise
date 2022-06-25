@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
@@ -10,7 +11,14 @@ public class BaseControllerTests
 
     public BaseControllerTests(ITestOutputHelper outputHelper)
     {
-        var application = new WebApplicationFactory<Program>();
+        var application = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureAppConfiguration((_, configurationBuilder) =>
+                {
+                    configurationBuilder.AddUserSecrets<BaseControllerTests>();
+                });
+            });
         Client = application.CreateDefaultClient(new LoggingHandler(outputHelper));
     }
 }
