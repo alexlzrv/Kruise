@@ -20,7 +20,7 @@ namespace Kruise.DataAccess.Postgres.Repositories
 
         public async Task<long> Add(PostModel newPost)
         {
-            var post = new PostEntity(0, newPost.Title);
+            var post = new PostEntity(0, newPost.Title, 0);
             _dbContext.Posts.Add(post);
             await _dbContext.SaveChangesAsync();
             return post.Id;
