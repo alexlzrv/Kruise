@@ -5,18 +5,18 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Kruise.IntegrationTests;
 
-public class PostsControllerTests
+public class AccountsControllerTests
 {
     [Fact]
-    public async Task Create_ShouldReturnPostId()
+    public async Task Create_ShouldReturnAccountId()
     {
         // Arrange
         var application = new WebApplicationFactory<Program>();
         var client = application.CreateClient();
-        var request = new CreatePostRequest(Guid.NewGuid().ToString());
+        var request = new CreateAccountRequest(Guid.NewGuid().ToString());
 
         // Act
-        var responce = await client.PostAsJsonAsync("api/posts", request);
+        var responce = await client.PostAsJsonAsync("api/accounts", request);
 
         // Assert
         responce.EnsureSuccessStatusCode();
@@ -26,15 +26,15 @@ public class PostsControllerTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public async Task Create_InvalidTitle_ShouldReturnBadRequest(string title)
+    public async Task Create_InvalidName_ShouldReturnBadRequest(string name)
     {
         // Arrange
         var application = new WebApplicationFactory<Program>();
         var client = application.CreateClient();
-        var request = new CreatePostRequest(title);
+        var request = new CreateAccountRequest(name);
 
         // Act
-        var responce = await client.PostAsJsonAsync("api/posts", request);
+        var responce = await client.PostAsJsonAsync("api/accounts", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, responce.StatusCode);

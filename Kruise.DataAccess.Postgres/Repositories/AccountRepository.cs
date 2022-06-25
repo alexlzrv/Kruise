@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using Kruise.DataAccess.Postgres.Entities;
+using Kruise.Domain;
 using Kruise.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +18,9 @@ public class AccountRepository : IAccountRepository
         _mapper = mapper;
     }
 
-    public async Task<long> Add(Domain.AccountModel newAccount)
+    public async Task<long> Add(AccountModel newAccount)
     {
-        var account = new Entities.AccountEntity(0, newAccount.Name);
+        var account = new AccountEntity(0, newAccount.Name);
         _dbContext.Accounts.Add(account);
         await _dbContext.SaveChangesAsync();
         return account.Id;
@@ -30,13 +33,13 @@ public class AccountRepository : IAccountRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Domain.AccountModel[]> Get()
+    public async Task<AccountModel[]> Get()
     {
         var account = await _dbContext.Accounts.AsNoTracking().ToArrayAsync();
-        return _mapper.Map<Entities.AccountEntity[], Domain.AccountModel[]>(account);
+        return _mapper.Map<AccountEntity[], AccountModel[]>(account);
     }
 
-    public async Task<Domain.AccountModel?> Get(long accountId)
+    public async Task<AccountModel?> Get(long accountId)
     {
         var account = await _dbContext.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == accountId);
         if (account == null)
@@ -44,6 +47,19 @@ public class AccountRepository : IAccountRepository
             return null;
         }
 
-        return _mapper.Map<Entities.AccountEntity, Domain.AccountModel>(account);
+        return _mapper.Map<AccountEntity, AccountModel>(account);
+    }
+
+    public async Task<Result> Update(long acccountId, AccountModel account)
+    {
+        var accountExists = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.Id == acccountId);
+        if (accountExists == null)
+        {
+            return Result.Failure($"Post with id: {acccountId} not found");
+        }
+
+        var accountEntity = _mapper.Map(account, accountExists);
+        await _dbContext.SaveChangesAsync();
+        return Result.Success();
     }
 }

@@ -1,5 +1,5 @@
-﻿using Kruise.Domain;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Kruise.Domain;
 
 namespace Kruise.API.Contracts;
 
@@ -10,7 +10,7 @@ public class CreateAccountRequest
         Name = name;
     }
 
-    [Required]
-    [StringLength(AccountModel.MaxNameLength)]
+    [Required(ErrorMessage = Errors.Account.NameCanNotBeNullOrWhiteSpace)]
+    [StringLength(AccountModel.MaxNameLength, ErrorMessage = Errors.Account.NameMaxLength)]
     public string Name { get; set; }
 }
