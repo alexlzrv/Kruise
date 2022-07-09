@@ -2,24 +2,48 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore ./Kruise.sln
+      - name: Build
+        run: dotnet build --no-restore ./Kruise.sln
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test
+        run: dotnet test ./Kruise.UnitTests/Kruise.UnitTests.csproj --no-build --verbosity normal
+
+  integration_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PostgreSQL
+        uses: Harmon758/postgresql-action@v1.0.0
+        with:
+          postgresql db: KruiseDb
+          postgresql password: pwd
+      - name: Init secrets
+        run: dotnet user-secrets init -p ./Kruise.API
+      - name: Set connection string
+        run: dotnet user-secrets set "ConnectionStrings:KruiseDbContext" "User ID=postgres;Password=pwd;Host=localhost;Port=5432;Database=KruiseDb" -p ./Kruise.API
+      - name: Tool restore
+        run: dotnet tool restore
+      - name: Update db
+        run: dotnet ef database update -p ./Kruise.DataAccess.Postgres -s ./Kruise.API
+      - name: Test
+        run: dotnet test ./Kruise.IntegrationTests/Kruise.IntegrationTests.csproj --no-build --verbosity normal

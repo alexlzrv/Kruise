@@ -1,11 +1,12 @@
-﻿using Telegram.Bot.Types.Enums;
+﻿using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace Kruise.API;
 public class ConfigureWebhook : IHostedService
 {
     private readonly ILogger<ConfigureWebhook> _logger;
     private readonly IServiceProvider _services;
-    private readonly BotConfiguration _botConfig;
+    private readonly string _botToken;
 
     public ConfigureWebhook(ILogger<ConfigureWebhook> logger,
                             IServiceProvider serviceProvider,
@@ -13,7 +14,7 @@ public class ConfigureWebhook : IHostedService
     {
         _logger = logger;
         _services = serviceProvider;
-        _botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+        _botToken = configuration.GetSection("BotConfiguration:BotToken").Value;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -21,7 +22,7 @@ public class ConfigureWebhook : IHostedService
         using var scope = _services.CreateScope();
         var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-        var webhookAddress = @$"bot/{_botConfig.BotToken}";
+        var webhookAddress = @$"bot/{_botToken}";
         _logger.LogInformation("Setting webhook: {WebhookAddress}", webhookAddress);
         await botClient.SetWebhookAsync(
             url: webhookAddress,
