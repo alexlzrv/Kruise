@@ -8,6 +8,7 @@ public class KruiseDbContext : DbContext
     public KruiseDbContext(DbContextOptions<KruiseDbContext> options)
         : base(options)
     {
+
     }
 
     public DbSet<PostEntity> Posts { get; set; } = null!;
