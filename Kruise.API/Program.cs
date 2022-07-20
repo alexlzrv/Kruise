@@ -1,10 +1,14 @@
-﻿using Kruise.API.Controllers;
+﻿using Kruise.API;
+using Kruise.API.Controllers;
 using Kruise.API.Telegram;
 using Kruise.DataAccess.Postgres;
 using Kruise.DataAccess.Postgres.Repositories;
 using Kruise.Domain.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
@@ -18,7 +22,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "KruiseAPI", Version = "v1" });
+            //var filePath = Path.Combine(System.AppContext.BaseDirectory, "Kruise.API.xml");
+            //c.IncludeXmlComments(filePath);
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please insert JWT with Bearer into field",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                   {
+                     new OpenApiSecurityScheme
+                     {
+                       Reference = new OpenApiReference
+                       {
+                         Type = ReferenceType.SecurityScheme,
+                         Id = "Bearer"
+                       }
+                     },
+                     new string[] { }
+                   }
+                  });
+        });
 
 var telegramConfiguration = builder.Configuration.GetSection(nameof(TelegramConfiguration));
 builder.Services.Configure<TelegramConfiguration>(telegramConfiguration);
@@ -54,6 +83,19 @@ builder.Services.AddOpenTelemetryTracing(x =>
     x.AddJaegerExporter();
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
+        };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
