@@ -5,8 +5,11 @@ using Kruise.DataAccess.Postgres.Repositories;
 using Kruise.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
+using Serilog.Enrichers.AspNetCore;
+using Serilog.Enrichers.Span;
 using Telegram.Bot;
 
 
@@ -36,12 +39,17 @@ builder.Services.AddLogging(x =>
     var logger = new LoggerConfiguration()
         //.ReadFrom.Services(builder.Services)
         .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.WithMemoryUsage()
+        .Enrich.WithSpan()
         .CreateLogger();
     x.AddSerilog(logger);
 });
 
 builder.Services.AddOpenTelemetryTracing(x =>
 {
+    x.AddSource("Kruise.API");
+    x.AddHttpClientInstrumentation();
+    x.AddEntityFrameworkCoreInstrumentation(o => o.SetDbStatementForText = true);
     x.AddAspNetCoreInstrumentation();
     x.AddJaegerExporter();
 });
