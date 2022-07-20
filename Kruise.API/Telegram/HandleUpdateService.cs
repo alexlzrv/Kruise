@@ -15,11 +15,11 @@ public class HandleUpdateService
         _chatName = telegramConfiguration.Value.ChatName;
     }
 
-    public async Task SendPost(string title)
+    public async Task SendPost()
     {
         var message = await _botClient.SendTextMessageAsync(
             chatId: _chatName,
-            text: title);
+            text: "Trying *all the parameters* of `sendMessage` method");
     }
 
     public async Task SendPostException()
