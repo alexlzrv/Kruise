@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace Kruise.API.Telegram;
 public class HandleUpdateService
@@ -17,11 +15,11 @@ public class HandleUpdateService
         _chatName = telegramConfiguration.Value.ChatName;
     }
 
-    public async Task SendPost()
+    public async Task SendPost(string title)
     {
         var message = await _botClient.SendTextMessageAsync(
             chatId: _chatName,
-            text: "Trying *all the parameters* of `sendMessage` method");
+            text: title);
     }
 
     public async Task SendPostException()
