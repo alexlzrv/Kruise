@@ -1,18 +1,16 @@
 ﻿using Kruise.API;
-using Kruise.API.Controllers;
 using Kruise.API.Telegram;
 using Kruise.DataAccess.Postgres;
 using Kruise.DataAccess.Postgres.Repositories;
 using Kruise.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
-using Serilog.Enrichers.AspNetCore;
 using Serilog.Enrichers.Span;
 using Telegram.Bot;
 
@@ -59,6 +57,9 @@ builder.Services.AddScoped<ITelegramBotClient>(x =>
 builder.Services.AddScoped<HandleUpdateService>();
 
 builder.Services.AddDbContext<KruiseDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString(nameof(KruiseDbContext))));
+builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<KruiseDbContext>();
+
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
@@ -96,6 +97,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -106,6 +108,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors(c =>
+{
+    c.WithHeaders().AllowAnyHeader();
+    c.WithOrigins().AllowAnyOrigin();
+});
 
 app.UseAuthentication();
 

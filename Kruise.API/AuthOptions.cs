@@ -5,7 +5,7 @@ namespace Kruise.API;
 
 public class AuthOptions
 {
-    public const string Secret = "test";
+    public const string Secret = "fksdf4psjefasjdklasj3323dada";
 
     public static SymmetricSecurityKey GetSymmetricSecurityKey()
     {
