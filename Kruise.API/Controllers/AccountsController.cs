@@ -9,8 +9,8 @@ namespace Kruise.API.Controllers;
 [Route("api/[controller]")]
 public class AccountsController : ControllerBase
 {
-    private ILogger<AccountsController> _logger;
-    private IAccountRepository _repository;
+    private readonly ILogger<AccountsController> _logger;
+    private readonly IAccountRepository _repository;
 
     public AccountsController(ILogger<AccountsController> logger, IAccountRepository repository)
     {

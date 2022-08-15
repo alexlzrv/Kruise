@@ -1,6 +1,7 @@
 ﻿using Kruise.API.Telegram;
+using Kruise.Domain;
+using Kruise.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Telegram.Bot.Types;
 
 namespace Kruise.API.Controllers;
 
@@ -8,17 +9,27 @@ namespace Kruise.API.Controllers;
 [Route("api/[controller]")]
 public class BotsController : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> Post([FromServices] HandleUpdateService handleUpdateService)
+    private readonly ILogger<PostsController> _logger;
+    private readonly IPostsRepository _repository;
+
+    public BotsController(ILogger<PostsController> logger, IPostsRepository repository)
     {
-        await handleUpdateService.SendPost();
-        return Ok();
+        _logger = logger;
+        _repository = repository;
     }
 
-    [HttpPost("Exception")]
-    public async Task<IActionResult> PostException([FromServices] HandleUpdateService handleUpdateService)
+    [HttpPost("{postId}")]
+    public async Task<IActionResult> Post([FromServices] TelegramService telegramService, long postId)
     {
-        await handleUpdateService.SendPostException();
+        var post = await _repository.Get(postId);
+
+        if (post == null)
+        {
+            await telegramService.SendExceptionPost($"Post with Id:{postId} not found");
+            return NotFound();
+        }
+
+        await telegramService.SendPost(post);
         return Ok();
     }
 }

@@ -14,11 +14,8 @@ using Serilog;
 using Serilog.Enrichers.Span;
 using Telegram.Bot;
 
-
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
         {
@@ -32,7 +29,8 @@ builder.Services.AddSwaggerGen(c =>
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+            {
                    {
                      new OpenApiSecurityScheme
                      {
@@ -44,7 +42,7 @@ builder.Services.AddSwaggerGen(c =>
                      },
                      new string[] { }
                    }
-                  });
+            });
         });
 
 var telegramConfiguration = builder.Configuration.GetSection(nameof(TelegramConfiguration));
@@ -54,7 +52,7 @@ builder.Services.AddScoped<ITelegramBotClient>(x =>
     var token = x.GetRequiredService<IOptions<TelegramConfiguration>>().Value;
     return new TelegramBotClient(token.Token);
 });
-builder.Services.AddScoped<HandleUpdateService>();
+builder.Services.AddScoped<TelegramService>();
 
 builder.Services.AddDbContext<KruiseDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString(nameof(KruiseDbContext))));
 builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -96,7 +94,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
         };
     });
-
 
 var app = builder.Build();
 
