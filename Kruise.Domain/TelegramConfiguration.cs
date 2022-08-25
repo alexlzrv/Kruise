@@ -1,4 +1,4 @@
-﻿namespace Kruise.API.Telegram;
+﻿namespace Kruise.Domain;
 
 public class TelegramConfiguration
 {

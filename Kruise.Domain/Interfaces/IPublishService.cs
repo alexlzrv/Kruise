@@ -4,7 +4,5 @@ namespace Kruise.Domain.Interfaces;
 
 public interface IPublishService
 {
-    Task SendPost(PostModel post, SenderModel[] sender);
-
-    IEnumerable<SenderModel[]> GetSenders();
+    Task SendPost(PostModel post);
 }

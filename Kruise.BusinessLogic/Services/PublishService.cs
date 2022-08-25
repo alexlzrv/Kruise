@@ -6,13 +6,18 @@ namespace Kruise.BusinessLogic.Services;
 
 public class PublishService : IPublishService
 {
-    public Task SendPost(PostModel post, SenderModel[] sender)
+    private readonly IEnumerable<ISender> _senders;
+
+    public PublishService(IEnumerable<ISender> senders)
     {
-        throw new NotImplementedException();
+        _senders = senders;
     }
 
-    public IEnumerable<SenderModel[]> GetSenders()
+    public async Task SendPost(PostModel post)
     {
-        throw new NotImplementedException();
+        foreach (var sender in _senders)
+        {
+            await sender.Send(post);
+        }
     }
 }

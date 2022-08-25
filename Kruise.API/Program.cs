@@ -1,8 +1,9 @@
 ﻿using Kruise.API;
-using Kruise.API.Telegram;
+using Kruise.BusinessLogic;
 using Kruise.DataAccess.Postgres;
 using Kruise.DataAccess.Postgres.Repositories;
 using Kruise.Domain.Interfaces;
+using Kruise.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Telegram.Bot;
+using Kruise.BusinessLogic.Senders;
+using Kruise.BusinessLogic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -47,16 +50,18 @@ builder.Services.AddSwaggerGen(c =>
 
 var telegramConfiguration = builder.Configuration.GetSection(nameof(TelegramConfiguration));
 builder.Services.Configure<TelegramConfiguration>(telegramConfiguration);
-builder.Services.AddScoped<ITelegramBotClient>(x =>
+builder.Services.AddSingleton<ITelegramBotClient>(x =>
 {
     var token = x.GetRequiredService<IOptions<TelegramConfiguration>>().Value;
     return new TelegramBotClient(token.Token);
 });
-builder.Services.AddScoped<TelegramService>();
 
 builder.Services.AddDbContext<KruiseDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString(nameof(KruiseDbContext))));
 builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<KruiseDbContext>();
+
+builder.Services.AddSingleton<ISender, TelegaramSender>();
+builder.Services.AddScoped<IPublishService, PublishService>();
 
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
