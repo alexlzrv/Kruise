@@ -1,9 +1,10 @@
 ﻿using Kruise.API;
-using Kruise.BusinessLogic;
+using Kruise.BusinessLogic.Senders;
+using Kruise.BusinessLogic.Services;
 using Kruise.DataAccess.Postgres;
 using Kruise.DataAccess.Postgres.Repositories;
-using Kruise.Domain.Interfaces;
 using Kruise.Domain;
+using Kruise.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,6 @@ using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Telegram.Bot;
-using Kruise.BusinessLogic.Senders;
-using Kruise.BusinessLogic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();

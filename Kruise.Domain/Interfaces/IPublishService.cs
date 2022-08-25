@@ -1,6 +1,4 @@
-﻿using Kruise.Domain.Models;
-
-namespace Kruise.Domain.Interfaces;
+﻿namespace Kruise.Domain.Interfaces;
 
 public interface IPublishService
 {

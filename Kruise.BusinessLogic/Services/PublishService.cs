@@ -1,6 +1,5 @@
 ﻿using Kruise.Domain;
 using Kruise.Domain.Interfaces;
-using Kruise.Domain.Models;
 
 namespace Kruise.BusinessLogic.Services;
 

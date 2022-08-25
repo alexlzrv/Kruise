@@ -22,7 +22,7 @@ public class PublishController : ControllerBase
     public async Task<IActionResult> Publish(long postId)
     {
         var post = await _repository.Get(postId);
-        var senders = _publish.SendPost(post);
+        await _publish.SendPost(post);
 
         return Ok();
     }
